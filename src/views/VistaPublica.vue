@@ -104,6 +104,7 @@ const cargarProductosYTelefono = async () => {
   }
 
   try {
+    // Obtener usuario dueño de la tienda
     const { data: usuario, error: errorUsuario } = await supabase
       .from('usuarios')
       .select('id, telefono')
@@ -117,10 +118,11 @@ const cargarProductosYTelefono = async () => {
 
     telefono.value = usuario.telefono || ''
 
+    // Cargar productos del usuario dueño de la tienda
     const { data: productosData, error: errorProductos } = await supabase
       .from('productos')
       .select('*')
-      .eq('user_id', usuario.id)
+      .eq('user_id', usuario.id) // Aquí usas el user_id del dueño de la tienda
 
     if (errorProductos) {
       error.value = 'Error cargando productos'
@@ -132,6 +134,8 @@ const cargarProductosYTelefono = async () => {
     error.value = 'Error inesperado: ' + e.message
   }
 }
+
+
 
 const agregarAlCarrito = (producto) => {
   carrito.value.push(producto)
