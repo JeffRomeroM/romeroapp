@@ -24,6 +24,8 @@
         <router-link to="/salidas" @click.native="cerrarMenu">Salidas</router-link>
         <router-link to="/carrito" @click.native="cerrarMenu">Carrito</router-link>
         <router-link :to="'/' + tienda" @click.native="cerrarMenu">Tienda pública</router-link>
+        <button @click="compartirTienda">Compartir tienda</button>
+
       </aside>
     </transition>
 
@@ -69,6 +71,29 @@ const cerrarMenu = () => {
   menuAbierto.value = false
   mostrarMenu.value = false
 }
+
+const compartirTienda = () => {
+  if (!tienda.value) {
+    console.error('Nombre de tienda no disponible')
+    return
+  }
+
+  const url = `${window.location.origin}/${tienda.value}`
+  const mensaje = `¡Mirá mi tienda en línea! 🛒\n${url}`
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Mi tienda',
+      text: mensaje,
+      url
+    }).catch((err) => console.error('Error al compartir:', err))
+  } else {
+    const whatsapp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`
+    window.open(whatsapp, '_blank')
+  }
+}
+
+
 </script>
 
 <style scoped>

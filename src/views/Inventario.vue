@@ -208,11 +208,24 @@ async function eliminar(id) {
 
 
 async function cargarProductos() {
-  const { data } = await supabase.from('productos').select('*')
-  if (data) {
-    productos.value = data
-    categoriasDisponibles.value = [...new Set(data.map(p => p.categoria).filter(Boolean))]
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError || !user) {
+    alert('Error al obtener usuario.')
+    return
   }
+
+  const { data, error } = await supabase
+    .from('productos')
+    .select('*')
+    .eq('user_id', user.id)
+
+  if (error) {
+    console.error('Error cargando productos:', error)
+    return
+  }
+
+  productos.value = data
+  categoriasDisponibles.value = [...new Set(data.map(p => p.categoria).filter(Boolean))]
 }
 
 function limpiarFiltros() {
