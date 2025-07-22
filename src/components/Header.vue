@@ -79,19 +79,20 @@ const compartirTienda = () => {
   }
 
   const url = `${window.location.origin}/${tienda.value}`
-  const mensaje = `¡Mirá mi tienda en línea! 🛒\n${url}`
+  const mensaje = `¡Mirá mi tienda en línea! 🛒`
 
   if (navigator.share) {
     navigator.share({
       title: 'Mi tienda',
       text: mensaje,
-      url
+      url // solo aquí va el link
     }).catch((err) => console.error('Error al compartir:', err))
   } else {
-    const whatsapp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`
+    const whatsapp = `https://wa.me/?text=${encodeURIComponent(mensaje + '\n' + url)}`
     window.open(whatsapp, '_blank')
   }
 }
+
 
 
 </script>
