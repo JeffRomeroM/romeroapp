@@ -367,4 +367,12 @@ onMounted(cargarProductos)
   border-radius: 5px;
   cursor: pointer;
 }
+
+@media (max-width: 600px) {
+ 
+  .cards {
+  grid-template-columns: repeat(2, 1fr);
+ 
+}
+}
 </style>

@@ -20,7 +20,7 @@
       <aside v-if="menuAbierto" class="sidebar" @click.stop>
         <router-link to="/dashboard" @click.native="cerrarMenu">Inicio</router-link>
         <router-link to="/inventario" @click.native="cerrarMenu">Inventario</router-link>
-        <router-link to="/entradas" @click.native="cerrarMenu">Entradas</router-link>
+        <router-link to="/entradas" @click.native="cerrarMenu">Ventas</router-link>
         <router-link to="/salidas" @click.native="cerrarMenu">Salidas</router-link>
         <router-link to="/carrito" @click.native="cerrarMenu">Carrito</router-link>
         <router-link :to="'/' + tienda" @click.native="cerrarMenu">Tienda pública</router-link>
