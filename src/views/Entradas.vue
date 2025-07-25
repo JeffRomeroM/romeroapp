@@ -8,10 +8,16 @@
       <input v-model="cliente" type="text" placeholder="Nombre del cliente" />
       <input v-model="clienteCelular" type="tel" placeholder="Número de celular" />
     </div>
+    <input
+      v-model="filtroBusqueda"
+      type="text"
+      placeholder="Buscar producto..."
+      class="buscador"
+    />
 
     <!-- Productos para seleccionar -->
     <div class="productos-grid">
-      <div v-for="p in productos" :key="p.id" class="card-producto">
+      <div  v-for="p in productosFiltrados" :key="p.id" class="card-producto">
         <img v-if="p.imagen_url" :src="p.imagen_url" alt="foto" />
         <h3>{{ p.nombre }}</h3>
         <p>Stock: {{ p.stock }}</p>
@@ -80,6 +86,15 @@ const cargarProductos = async () => {
   if (!error) productos.value = data || []
 }
 
+const filtroBusqueda = ref('')
+const productosFiltrados = computed(() => {
+  if (!filtroBusqueda.value.trim()) return productos.value
+  return productos.value.filter(p =>
+    p.nombre.toLowerCase().includes(filtroBusqueda.value.toLowerCase())
+  )
+})
+
+
 const puedeVender = computed(() => {
   if (!cliente.value.trim() || !clienteCelular.value.trim()) return false
   return Object.values(cantidades).some(c => c > 0)
@@ -114,11 +129,16 @@ async function registrarVenta() {
     }
   }
 
-  const { error } = await supabase.from('entr').insert(ventasAInsertar)
-  if (error) {
-    alert('Error al registrar venta: ' + error.message)
-    return
-  }
+  try {
+  const { error } = await supabase.from("entradas").insert(ventasAInsertar);
+
+
+  if (error) throw error;
+  // Registro exitoso
+} catch (error) {
+  console.error("Error al registrar venta:", error.message || error);
+}
+
 
   for (const item of items) {
     const prod = productos.value.find(p => p.id === item.producto_id)
@@ -325,4 +345,43 @@ button:disabled {
 .factura th {
   background-color: #f0f0f0;
 }
+.buscador {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  width: 98%;
+}
+
+@media (max-width: 600px) {
+  .cliente-form {
+    flex-direction: column;
+  }
+
+  .productos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .factura table {
+    font-size: 12px;
+  }
+
+  .factura h3, .factura h4 {
+    font-size: 16px;
+  }
+
+
+  .buscador {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    width: 95%;
+    
+  }
+  input{
+    width: 95%;
+  }
+}
+
 </style>
